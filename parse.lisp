@@ -1,5 +1,8 @@
 (in-package :toml)
 
+(defparameter *true* t)
+(defparameter *false* nil)
+
 (defun make-adjustable-string ()
   (make-array 0 :adjustable t :fill-pointer 0 :element-type 'character))
 
@@ -247,8 +250,8 @@
     (or "true" "false")
   (:lambda (s)
     (if (string= s "true")
-        t
-        nil)))
+        *true*
+        *false*)))
 
 (defrule 4digit
     (and digit digit digit digit))

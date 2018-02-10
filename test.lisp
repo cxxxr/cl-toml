@@ -56,7 +56,7 @@ hosts = [
         (is (gethash "server" database) "192.168.1.1" :test #'equal)
         (is (gethash "ports" database) #(8001 8001 8002) :test #'equalp)
         (is (gethash "connection_max" database) 5000)
-        (is (gethash "enabled" database) t))
+        (is (gethash "enabled" database) *true*))
       (let ((servers (gethash "servers" x)))
         (is (hash-table-count servers) 2)
         (let ((alpha (gethash "alpha" servers)))
@@ -136,8 +136,8 @@ is preserved.
           :do (ok (esrap:parse 'toml::value s))))
 
   (subtest "boolean"
-    (is (esrap:parse 'toml::value "true") t)
-    (is (esrap:parse 'toml::value "false") nil))
+    (is (esrap:parse 'toml::value "true") *true*)
+    (is (esrap:parse 'toml::value "false") *false*))
 
   (subtest "datetime"
     (dolist (s '("1979-05-27T07:32:00Z"

@@ -11,3 +11,6 @@
 
 (defun vector-last (vector)
   (aref vector (1- (length vector))))
+
+(defun (setf vector-last) (value vector)
+  (setf (aref vector (1- (length vector))) value))

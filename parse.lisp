@@ -3,6 +3,94 @@
 (defparameter *true* t)
 (defparameter *false* nil)
 
+(defparameter *table-as* :hash-table)
+(defparameter *array-as* :vector)
+
+(defun make-table ()
+  (ecase *table-as*
+    (:hash-table
+     (make-hash-table :test #'equal))
+    ((:alist :plist)
+     (list))))
+
+(defun alist-to-table (alist)
+  (ecase *table-as*
+    (:hash-table
+     (alexandria:alist-hash-table alist :test 'equal))
+    (:plist
+     (alexandria:alist-plist alist))
+    (:alist
+     alist)))
+
+(defun table-p (x)
+  (ecase *table-as*
+    (:hash-table
+     (hash-table-p x))
+    (:plist
+     (trivial-types:property-list-p x))
+    (:alist
+     (trivial-types:association-list-p x))))
+
+(defun table-get (table key)
+  (ecase *table-as*
+    (:hash-table
+     (gethash key table))
+    (:plist
+     (getf table (intern key :keyword)))
+    (:alist
+     (alexandria:assoc-value table key :test #'equal))))
+
+(defun table-put (table key value)
+  (ecase *table-as*
+    (:hash-table
+     (setf (gethash key table) value)
+     table)
+    (:plist
+     (setf (getf table (intern key :keyword)) value)
+     table)
+    (:alist
+     (let ((elt (assoc key table :test #'equal)))
+       (if elt
+           (progn
+             (setf (cdr elt) value)
+             table)
+           (acons key value table)))))) 
+
+(defun make-toml-array ()
+  (ecase *array-as*
+    (:vector
+     (make-adjustable-vector))
+    (:list
+     (list))))
+
+(defun toml-array-push (array value)
+  (ecase *array-as*
+    (:vector
+     (vector-push-extend value array)
+     array)
+    (:list
+     (nconc array (list value)))))
+
+(defun toml-array-last (array)
+  (ecase *array-as*
+    (:vector
+     (vector-last array))
+    (:list
+     (car (last array)))))
+
+(defun (setf toml-array-last) (value array)
+  (ecase *array-as*
+    (:vector
+     (setf (vector-last array) value))
+    (:list
+     (setf (car (last array)) value))))
+
+(defun list-to-toml-array (list)
+  (ecase *array-as*
+    (:vector
+     (list-to-vector list))
+    (:list
+     list)))
 
 (defrule space*
     (* #\space))
@@ -72,11 +160,10 @@
         (and #\{ table-pair (* (and #\, table-pair)) #\}))
   (:lambda (s)
     (if (= 3 (length s))
-        (make-hash-table :test 'equal)
-        (alexandria:alist-hash-table
+        (make-table)
+        (alist-to-table
          (cons (second s)
-               (mapcar #'second (third s)))
-         :test 'equal))))
+               (mapcar #'second (third s)))))))
 
 (defun convert-escape-sequence (string multiline-p)
   (let ((i 0))
@@ -283,7 +370,7 @@
   (:lambda (x)
     (if (= 3 (length x))
         (vector)
-        (list-to-vector
+        (list-to-toml-array
          (cons (second x)
                (mapcar #'second (third x)))))))
 
@@ -302,38 +389,40 @@
   (unless table
     (setf table
           (if (and (null names) arrayp)
-              (make-adjustable-vector)
-              (make-hash-table :test 'equal))))
+              (make-toml-array)
+              (make-table))))
   (cond (names
-         (cond ((hash-table-p table)
-                (setf (gethash (first names) table)
-                      (linked-table (rest names)
-                                    (gethash (first names) table)
-                                    last-value
-                                    arrayp)))
+         (cond ((table-p table)
+                (setf table
+                      (table-put table
+                                 (first names)
+                                 (linked-table (rest names)
+                                               (table-get table (first names))
+                                               last-value
+                                               arrayp))))
                (t
-                (setf (gethash (first names) (vector-last table))
-                      (linked-table (rest names)
-                                    (gethash (first names) (vector-last table))
-                                    last-value
-                                    arrayp))))
+                (setf (toml-array-last table)
+                      (table-put (toml-array-last table)
+                                 (first names)
+                                 (linked-table (rest names)
+                                               (table-get (toml-array-last table) (first names))
+                                               last-value
+                                               arrayp)))))
          table)
         (arrayp
-         (vector-push-extend (alexandria:alist-hash-table last-value :test 'equal)
-                             table)
-         table)
+         (toml-array-push table (alist-to-table last-value)))
         (t
          (loop :for (k . v) :in last-value
-               :do (setf (gethash k table) v))
+               :do (setf table (table-put table k v)))
          table)))
 
 (defrule toplevel
     (and whitespace* table-pairs (* table))
   (:destructure (spaces pairs header-pairs)
    (declare (ignore spaces))
-   (let ((table (make-hash-table :test 'equal)))
+   (let ((table (make-table)))
      (loop :for (k . v) :in pairs
-           :do (setf (gethash k table) v))
+           :do (setf table (table-put table k v)))
      (loop :for ((arrayp . names) pairs) :in header-pairs
            :for count :from 0
            :do (setf table (linked-table names table pairs arrayp)))
@@ -349,7 +438,7 @@
      (map 'vector #'print-toml x))
     (otherwise x)))
 
-(defun parse (string)
+(defun parse (string &key ((:array-as *array-as*) *array-as*) ((:table-as *table-as*) *table-as*))
   (esrap:parse 'toplevel string))
 
 (defun parse-file (filename)

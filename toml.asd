@@ -1,5 +1,6 @@
 (defsystem "toml"
   :depends-on ("alexandria"
+               "trivial-types"
                "esrap"
                "local-time")
   :serial t

@@ -1,8 +1,5 @@
 (in-package :toml)
 
-(defparameter *true* t)
-(defparameter *false* nil)
-
 (defparameter *table-as* :hash-table)
 (defparameter *array-as* :vector)
 
@@ -326,8 +323,8 @@
     (or "true" "false")
   (:lambda (s)
     (if (string= s "true")
-        *true*
-        *false*)))
+        'true
+        'false)))
 
 (defrule 4digit
     (and digit digit digit digit))

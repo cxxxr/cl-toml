@@ -2,7 +2,7 @@
   (:use :cl :esrap)
   (:shadow :parse)
   (:export
-   :*true*
-   :*false*
+   :true
+   :false
    :parse
    :parse-file))

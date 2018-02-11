@@ -4,6 +4,7 @@
                "local-time")
   :serial t
   :components ((:file "package")
+               (:file "util")
                (:file "parse")))
 
 (defsystem "toml-test"

@@ -5,4 +5,5 @@
    :true
    :false
    :parse
-   :parse-file))
+   :parse-file
+   :encode))

@@ -6,7 +6,8 @@
   :serial t
   :components ((:file "package")
                (:file "util")
-               (:file "parse")))
+               (:file "parse")
+               (:file "encode")))
 
 (defsystem "toml-test"
   :depends-on ("toml" "prove")

@@ -38,8 +38,11 @@ hosts = [
   \"omega\"
 ]
 ")
+
+
 (toml:parse *example-text*)
 => #<EQUAL Hash Table{5} 40205D45A3>
+
 
 (toml:parse *example-text* :table-as :alist)
 => (("clients" ("hosts" . #("alpha" "omega")) ("data" . #(#("gamma" "delta") #(1 2))))
@@ -53,6 +56,7 @@ hosts = [
      ("server" . "192.168.1.1"))
     ("owner" ("dob" . @1979-05-27T15:32:00.000000Z) ("name" . "Lance Uppercut"))
     ("title" . "TOML Example"))
+
 
 (toml:encode '(("clients" ("hosts" . #("alpha" "omega")) ("data" . #(#("gamma" "delta") #(1 2))))
                ("servers"
@@ -85,8 +89,7 @@ hosts = [
 [owner]
 "dob" = 1979-05-27T15:32:00.000000Z
 "name" = "Lance Uppercut"
+```
 
 ## License
 MIT
-
-```

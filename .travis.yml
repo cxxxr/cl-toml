@@ -14,4 +14,4 @@ install:
   - ros install cxxxr/cl-toml
 
 script:
-  - ros -s toml-test -e '(or (prove:run :toml-test) (uiop:quit -1))'
+  - ros -s toml -s prove -e '(or (prove:run :toml-test) (uiop:quit -1))'

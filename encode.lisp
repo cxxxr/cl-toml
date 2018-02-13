@@ -3,9 +3,10 @@
 (defvar *inline-value-p* nil)
 (defvar *table-name-stack* '())
 
-(defun table-p (x)
+(defun table-value-p (x)
   (or (hash-table-p x)
-      (trivial-types:property-list-p x)))
+      (trivial-types:property-list-p x)
+      (trivial-types:association-list-p x)))
 
 (defun array-p (x)
   (or (and (listp x)
@@ -15,7 +16,7 @@
 (defun table-array-p (x)
   (and (array-p x)
        (or (zerop (length x))
-           (table-p (elt x 0)))))
+           (table-value-p (elt x 0)))))
 
 (defgeneric encode (value &optional stream))
 
@@ -111,7 +112,7 @@
                (table-header t)
                (encode e stream)
                (terpri stream))))
-          ((table-p value)
+          ((table-value-p value)
            (let ((*table-name-stack* (cons key *table-name-stack*)))
              (table-header nil)
              (encode value stream)))
@@ -129,7 +130,7 @@
          (multiple-value-bind (more key value) (funcall iter)
            (cond ((not more)
                   (return))
-                 ((or (table-p value) (table-array-p value))
+                 ((or (table-value-p value) (table-array-p value))
                   (push (cons key value) cont))
                  (t
                   (encode-key-value key value stream)))))

@@ -19,7 +19,7 @@
     (:alist
      alist)))
 
-(defun table-p (x)
+(defun as-table-p (x)
   (ecase *table-as*
     (:hash-table
      (hash-table-p x))
@@ -389,7 +389,7 @@
               (make-toml-array)
               (make-table))))
   (cond (names
-         (cond ((table-p table)
+         (cond ((as-table-p table)
                 (setf table
                       (table-put table
                                  (first names)

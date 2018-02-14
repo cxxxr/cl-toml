@@ -1,4 +1,7 @@
 (defsystem "toml"
+  :license "MIT"
+  :author "cxxxr"
+  :description "TOML v0.4.0 parser and encoder"
   :depends-on ("alexandria"
                "trivial-types"
                "esrap"

@@ -11,7 +11,8 @@ env:
 
 install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
+  - ros install prove
   - ros install cxxxr/cl-toml
 
 script:
-  - ros -s toml -s prove -e '(or (prove:run :toml-test) (uiop:quit -1))'
+  - run-prove toml-test.asd

@@ -267,7 +267,7 @@ is preserved.
 
   (subtest "float"
     (loop :for s :in '("+1.0" "3.1415" "-0.01" "5e+22" "1e6" "-2E-2" "6.626e-34"
-                       "9_224_617.445_991_228_313" "1e1_000")
+                       "9_224_617.445_991_228_313" "1e1_0")
           :do (ok (esrap:parse 'toml::value s))))
 
   (subtest "boolean"

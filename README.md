@@ -1,4 +1,6 @@
 # cl-toml
+[![Build Status](https://travis-ci.org/cxxxr/cl-toml.svg?branch=master)](https://travis-ci.org/cxxxr/cl-toml)
+
 toml 0.4.0 parser and encoder
 
 ## Usage

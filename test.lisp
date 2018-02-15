@@ -1,6 +1,6 @@
-(defpackage :toml-test
-  (:use :cl :toml :prove))
-(in-package :toml-test)
+(defpackage :cl-toml-test
+  (:use :cl :cl-toml :prove))
+(in-package :cl-toml-test)
 
 (plan nil)
 
@@ -210,21 +210,21 @@ name = \"plantain\"
     (parse-test "example"))
 
   (subtest "string"
-    (is (coerce (esrap:parse 'toml::value "\"\\b\\t\\n\\fabc\\r\\n\\\"\\/\\\\\\u1234\"") 'list)
+    (is (coerce (esrap:parse 'cl-toml::value "\"\\b\\t\\n\\fabc\\r\\n\\\"\\/\\\\\\u1234\"") 'list)
         '(#\Backspace #\Tab #\Newline #\Page #\a #\b #\c #\Newline #\" #\/ #\\ #\ሴ)
         :test #'equal)
 
-    (is (esrap:parse 'toml::value "\"\"\"
+    (is (esrap:parse 'cl-toml::value "\"\"\"
 Roses are red
 Violets are blue\"\"\"")
         "Roses are red
 Violets are blue"
         :test #'equal)
 
-    (is (esrap:parse 'toml::value "\"The quick brown fox jumps over the lazy dog.\"")
+    (is (esrap:parse 'cl-toml::value "\"The quick brown fox jumps over the lazy dog.\"")
         "The quick brown fox jumps over the lazy dog."
         :test #'string=)
-    (is (esrap:parse 'toml::value "\"\"\"
+    (is (esrap:parse 'cl-toml::value "\"\"\"
 The quick brown \\
 
 
@@ -232,7 +232,7 @@ fox jumps over \\
 the lazy dog.\"\"\"")
         "The quick brown fox jumps over the lazy dog."
         :test #'string=)
-    (is (esrap:parse 'toml::value "\"\"\"\\
+    (is (esrap:parse 'cl-toml::value "\"\"\"\\
 The quick brown \\
 fox jumps over \\
 the lazy dog.\\
@@ -244,10 +244,10 @@ the lazy dog.\\
                  "\\\\ServerX\\admin$\\system32\\"
                  "Tom \"Dubs\" Preston-Werner"
                  "<\\i\\c*\\s*>"))
-      (is (esrap:parse 'toml::value (format nil "'~A'" s)) s :test #'string=))
+      (is (esrap:parse 'cl-toml::value (format nil "'~A'" s)) s :test #'string=))
 
-    (is (esrap:parse 'toml::value "'''I [dw]on't need \\d{2} apples'''") "I [dw]on't need \\d{2} apples" :test #'string=)
-    (is (esrap:parse 'toml::value "'''
+    (is (esrap:parse 'cl-toml::value "'''I [dw]on't need \\d{2} apples'''") "I [dw]on't need \\d{2} apples" :test #'string=)
+    (is (esrap:parse 'cl-toml::value "'''
 The first newline is
 trimmed in raw strings.
 All other whitespace
@@ -263,38 +263,38 @@ is preserved.
   (subtest "integer"
     (loop :for (s v) :in '(("+99" 99) ("42" 42) ("0" 0) ("-17" -17)
                            ("1_000" 1000) ("5_349_221" 5349221) ("1_2_3_4_5" 12345))
-          :do (is (esrap:parse 'toml::value s) v)))
+          :do (is (esrap:parse 'cl-toml::value s) v)))
 
   (subtest "float"
     (loop :for s :in '("+1.0" "3.1415" "-0.01" "5e+22" "1e6" "-2E-2" "6.626e-34"
                        "9_224_617.445_991_228_313" "1e1_0")
-          :do (ok (esrap:parse 'toml::value s))))
+          :do (ok (esrap:parse 'cl-toml::value s))))
 
   (subtest "boolean"
-    (is (esrap:parse 'toml::value "true") 'true)
-    (is (esrap:parse 'toml::value "false") 'false))
+    (is (esrap:parse 'cl-toml::value "true") 'true)
+    (is (esrap:parse 'cl-toml::value "false") 'false))
 
   (subtest "datetime"
     (dolist (s '("1979-05-27T07:32:00Z"
                  "1979-05-27T00:32:00-07:00"
                  "1979-05-27T00:32:00.999999-07:00"))
-      (is (esrap:parse 'toml::value s)
+      (is (esrap:parse 'cl-toml::value s)
           (local-time:parse-rfc3339-timestring s)
           :test #'local-time:timestamp=)))
 
   (subtest "array"
-    (is (esrap:parse 'toml::value "[ 1, 2, 3 ]") #(1 2 3) :test #'equalp)
-    (is (esrap:parse 'toml::value "[ \"red\", \"yellow\", \"green\" ]") #("red" "yellow" "green") :test #'equalp)
-    (is (esrap:parse 'toml::value "[ [ 1, 2 ], [3, 4, 5] ]") #(#(1 2) #(3 4 5)) :test #'equalp)
-    (is (esrap:parse 'toml::value "[ \"all\", 'strings', \"\"\"are the same\"\"\", '''type''']")
+    (is (esrap:parse 'cl-toml::value "[ 1, 2, 3 ]") #(1 2 3) :test #'equalp)
+    (is (esrap:parse 'cl-toml::value "[ \"red\", \"yellow\", \"green\" ]") #("red" "yellow" "green") :test #'equalp)
+    (is (esrap:parse 'cl-toml::value "[ [ 1, 2 ], [3, 4, 5] ]") #(#(1 2) #(3 4 5)) :test #'equalp)
+    (is (esrap:parse 'cl-toml::value "[ \"all\", 'strings', \"\"\"are the same\"\"\", '''type''']")
         #("all" "strings" "are the same" "type") :test #'equalp)
-    (is (esrap:parse 'toml::value "[ [ 1, 2 ], [\"a\", \"b\", \"c\"] ]")
+    (is (esrap:parse 'cl-toml::value "[ [ 1, 2 ], [\"a\", \"b\", \"c\"] ]")
         #(#(1 2) #("a" "b" "c")) :test #'equalp)
-    (is (esrap:parse 'toml::value "[
+    (is (esrap:parse 'cl-toml::value "[
 1, 2, 3
 ]")
         #(1 2 3) :test #'equalp)
-    (is (esrap:parse 'toml::value "[
+    (is (esrap:parse 'cl-toml::value "[
 1,
 2, # OK
 ]")

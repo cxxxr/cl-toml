@@ -1,4 +1,4 @@
-(in-package :toml)
+(in-package :cl-toml)
 
 (defparameter *table-as* :hash-table)
 (defparameter *array-as* :vector)

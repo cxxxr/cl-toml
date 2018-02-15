@@ -1,4 +1,4 @@
-(in-package :toml)
+(in-package :cl-toml)
 
 (defun make-adjustable-string ()
   (make-array 0 :adjustable t :fill-pointer 0 :element-type 'character))

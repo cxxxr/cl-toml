@@ -16,4 +16,4 @@ install:
   - ros install cxxxr/cl-toml
 
 script:
-  - run-prove toml-test.asd
+  - run-prove cl-toml-test.asd

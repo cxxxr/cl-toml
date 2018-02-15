@@ -1,4 +1,4 @@
-(defsystem "toml"
+(defsystem "cl-toml"
   :license "MIT"
   :author "cxxxr"
   :description "TOML v0.4.0 parser and encoder"

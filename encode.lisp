@@ -1,4 +1,4 @@
-(in-package :toml)
+(in-package :cl-toml)
 
 (defvar *inline-value-p* nil)
 (defvar *table-name-stack* '())

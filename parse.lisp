@@ -425,16 +425,6 @@
            :do (setf table (linked-table names table pairs arrayp)))
      table)))
 
-(defun print-toml (x)
-  (typecase x
-    (hash-table
-     (loop :for (k . v) :in (alexandria:hash-table-alist x)
-           :collect (cons k (print-toml v))))
-    (string x)
-    (vector
-     (map 'vector #'print-toml x))
-    (otherwise x)))
-
 (defun parse (string &key ((:array-as *array-as*) *array-as*) ((:table-as *table-as*) *table-as*))
   (esrap:parse 'toplevel string))
 

@@ -11,4 +11,4 @@
                (:file "util")
                (:file "parse")
                (:file "encode"))
-  :in-order-to ((test-op (test-op "toml-test"))))
+  :in-order-to ((test-op (test-op "cl-toml-test"))))

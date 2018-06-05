@@ -11,7 +11,8 @@
 (defun array-p (x)
   (or (and (listp x)
            (not (trivial-types:property-list-p x)))
-      (vectorp x)))
+      (and (vectorp x)
+           (not (stringp x)))))
 
 (defun table-array-p (x)
   (and (array-p x)

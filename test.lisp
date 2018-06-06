@@ -326,6 +326,12 @@ is preserved.
                        (cl-toml:encode '(("foo" ("bar" . ""))) out))
                      :table-as :alist)
       '(("foo" ("bar" . "")))
-      :test #'equal))
+      :test #'equal)
+
+  (is (cl-toml:parse (with-output-to-string (out)
+                       (cl-toml:encode '(("foo" ("bar" . #()))) out))
+                     :table-as :alist)
+      '(("foo" ("bar" . #())))
+      :test #'equalp))
 
 (finalize)

@@ -16,8 +16,8 @@
 
 (defun table-array-p (x)
   (and (array-p x)
-       (or (zerop (length x))
-           (table-value-p (elt x 0)))))
+       (plusp (length x))
+       (table-value-p (elt x 0))))
 
 (defgeneric encode (value &optional stream))
 

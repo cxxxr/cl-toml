@@ -320,6 +320,12 @@ is preserved.
   (subtest "table-3" (encode-test "table-3"))
   (subtest "inline-table" (encode-test "inline-table"))
   (subtest "array-table-1" (encode-test "array-table-1"))
-  (subtest "array-table-2" (encode-test "array-table-2")))
+  (subtest "array-table-2" (encode-test "array-table-2"))
+
+  (is (cl-toml:parse (with-output-to-string (out)
+                       (cl-toml:encode '(("foo" ("bar" . ""))) out))
+                     :table-as :alist)
+      '(("foo" ("bar" . "")))
+      :test #'equal))
 
 (finalize)

@@ -19,10 +19,6 @@
        (plusp (length x))
        (table-value-p (elt x 0))))
 
-(defun bare-key-p (x)
-  (and (stringp x)
-       (every #'bare-key-character-p x)))
-
 (defgeneric encode (value &optional stream))
 
 (defmethod encode ((value ratio) &optional (stream *standard-output*))

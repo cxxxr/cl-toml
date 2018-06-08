@@ -9,6 +9,7 @@
   :serial t
   :components ((:file "package")
                (:file "util")
+               (:file "types")
                (:file "parse")
                (:file "encode"))
   :in-order-to ((test-op (test-op "cl-toml-test"))))

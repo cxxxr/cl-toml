@@ -101,10 +101,6 @@
 (defrule end-of-line
     (and space* (? comment) (* #\newline) (or #\newline (string 0))))
 
-(defun bare-key-character-p (c)
-  (or (alphanumericp c)
-      (member c '(#\_ #\-))))
-
 (defrule bare-key
     (+ (bare-key-character-p character))
   (:lambda (list)
@@ -245,9 +241,6 @@
   (:destructure (q1 first-newline string q2)
    (declare (ignore q1 first-newline q2))
    string))
-
-(defun literal-string-char-p (char)
-  (not (or (eql char #\') (eql char #\newline))))
 
 (defrule literal-string-contents
     (* (literal-string-char-p character))

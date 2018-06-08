@@ -19,6 +19,10 @@
        (plusp (length x))
        (table-value-p (elt x 0))))
 
+(defun bare-key-p (x)
+  (and (stringp x)
+       (every #'bare-key-character-p x)))
+
 (defgeneric encode (value &optional stream))
 
 (defmethod encode ((value ratio) &optional (stream *standard-output*))
@@ -92,16 +96,12 @@
             (format stream "~A = " key)
             (encode value stream)))))))
 
-(defun word-string-p (string)
-  (loop :for c :across string
-        :always (or (alphanumericp c) (char= c #\_))))
-
 (defun encode-key-value (key value stream)
   (flet ((table-header (arrayp)
            (write-string (if arrayp "[[" "[") stream)
            (loop :for rest :on (reverse *table-name-stack*)
                  :for name := (first rest)
-                 :do (if (word-string-p name)
+                 :do (if (bare-key-p name)
                          (write-string name stream)
                          (encode (format nil "~A" name) stream))
                      (when (rest rest) (write-char #\. stream)))
@@ -118,7 +118,9 @@
              (table-header nil)
              (encode value stream)))
           (t
-           (encode key stream)
+           (if (bare-key-p key)
+               (write-string key stream)
+               (encode key stream))
            (write-string " = " stream)
            (encode value stream)
            (terpri stream)))))

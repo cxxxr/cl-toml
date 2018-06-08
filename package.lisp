@@ -6,4 +6,5 @@
    :false
    :parse
    :parse-file
-   :encode))
+   :encode
+   :encode-literal-string))

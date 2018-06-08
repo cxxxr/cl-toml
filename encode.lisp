@@ -54,6 +54,13 @@
   (write-char #\" stream)
   value)
 
+(defun encode-literal-string (string &optional (stream *standard-output*))
+  (check-type string literal-string)
+  (write-char #\' stream)
+  (write-string string stream)
+  (write-char #\' stream)
+  string)
+
 (defmethod encode ((value (eql t)) &optional (stream *standard-output*))
   (write-string "true" stream))
 

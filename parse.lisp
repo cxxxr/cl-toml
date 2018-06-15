@@ -421,5 +421,5 @@
 (defun parse (string &key ((:array-as *array-as*) *array-as*) ((:table-as *table-as*) *table-as*))
   (esrap:parse 'toplevel string))
 
-(defun parse-file (filename)
-  (parse (uiop:read-file-string filename)))
+(defun parse-file (filename &rest args &key ((:array-as *array-as*) *array-as*) ((:table-as *table-as*) *table-as*))
+  (apply #'parse (uiop:read-file-string filename) args))

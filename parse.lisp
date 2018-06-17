@@ -46,12 +46,7 @@
      (setf (getf table (intern key :keyword)) value)
      table)
     (:alist
-     (let ((elt (assoc key table :test #'equal)))
-       (if elt
-           (progn
-             (setf (cdr elt) value)
-             table)
-           (acons key value table)))))) 
+     (alist-put-end table key value))))
 
 (defun make-toml-array ()
   (ecase *array-as*

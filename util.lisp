@@ -29,5 +29,18 @@
         (let ((elt (pop alist)))
           (values t (car elt) (cdr elt))))))
 
+(defun alist-put-end (table key value)
+  (loop :for prev := nil :then rest
+        :for rest :on table
+        :for elt := (first rest)
+        :do (when (equal (car elt) key)
+              (setf (cdr elt) value)
+              (return))
+        :finally (cond ((null prev)
+                        (setf table (acons key value nil)))
+                       (t
+                        (setf (cdr prev) (list (cons key value))))))
+  table)
+
 (defmacro do-sequence ((var sequence) &body body)
   `(map nil (lambda (,var) ,@body) ,sequence))

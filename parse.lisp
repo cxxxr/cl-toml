@@ -402,9 +402,9 @@
          table)))
 
 (defrule toplevel
-    (and whitespace* table-pairs (* table))
-  (:destructure (spaces pairs header-pairs)
-   (declare (ignore spaces))
+    (and whitespace* table-pairs (* table) whitespace*)
+  (:destructure (spaces1 pairs header-pairs spaces2)
+   (declare (ignore spaces1 spaces2))
    (let ((table (make-table)))
      (loop :for (k . v) :in pairs
            :do (setf table (table-put table k v)))

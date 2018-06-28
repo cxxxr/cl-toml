@@ -334,4 +334,10 @@ is preserved.
       '(("foo" ("bar" . #())))
       :test #'equalp))
 
+(is (cl-toml:parse "key = \"value\"
+#comment"
+                   :table-as :alist)
+    '(("key" . "value"))
+    :test #'equal)
+
 (finalize)

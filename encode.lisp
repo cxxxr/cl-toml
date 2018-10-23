@@ -41,7 +41,6 @@
     (#\newline . "\\n")
     (#\return . "")
     (#\" . "\\\"")
-    (#\/ . "\\/")
     (#\\ . "\\\\")))
 
 (defmethod encode ((value string) &optional (stream *standard-output*))

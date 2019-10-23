@@ -192,12 +192,15 @@
                       (vector-push-extend c buffer)))
         buffer))))
 
+(defun convert-to-simple-string (string)
+  (coerce string 'simple-string))
+
 (defun transform-string-contents (list multiline-p)
   (let ((buffer (make-adjustable-string)))
     (loop :for e :in list
           :for c := (if (consp e) (char (second e) 0) e)
           :do (vector-push-extend c buffer))
-    (convert-escape-sequence buffer multiline-p)))
+    (convert-to-simple-string (convert-escape-sequence buffer multiline-p))))
 
 (defun string-char-p (char)
   (not (or (eql char #\") (eql char #\newline))))
